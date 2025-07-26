@@ -122,6 +122,12 @@ int main(void)
 		/* turn off LED */
 		HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
 
+		/* make tx buffer */
+		sprintf(tData, "LED turned off.\n");
+
+		/* send data */
+		HAL_UART_Transmit(&huart1, tData, 16, 100);
+
 		/* reset data */
 		rData = 0;
 	}
@@ -130,8 +136,31 @@ int main(void)
 		/* turn off LED */
 		HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
 
+		/* make tx buffer */
+		sprintf(tData, "LED turned on.\n");
+
+		/* send data */
+		HAL_UART_Transmit(&huart1, tData, 15, 100);
+
 		/* reset data */
 		rData = 0;
+	}
+
+
+	/* check button pressed */
+	if(HAL_GPIO_ReadPin(BUTTON_GPIO_Port, BUTTON_Pin) == GPIO_PIN_RESET)
+	{
+		/* increase counter */
+		pressed_counter++;
+
+		/* make tx buffer */
+		sprintf(tData, "pressed : %3d\n", pressed_counter);
+
+		/* send data */
+		HAL_UART_Transmit(&huart1, tData, 14, 100);
+
+		/* for button bounce */
+		HAL_Delay(200);
 	}
 
 
@@ -254,7 +283,7 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin : BUTTON_Pin */
   GPIO_InitStruct.Pin = BUTTON_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(BUTTON_GPIO_Port, &GPIO_InitStruct);
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
