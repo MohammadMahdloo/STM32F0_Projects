@@ -114,7 +114,25 @@ int main(void)
 	/* receive and store in rData */
 	/* size of data : 1 byte */
 	/* maximum polling time : 100ms */
-	HAL_UART_Receive(&huart1, rData, 1, 100);
+	HAL_UART_Receive(&huart1, &rData, 1, 100);
+
+	/* check received data */
+	if(rData == '0')
+	{
+		/* turn off LED */
+		HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
+
+		/* reset data */
+		rData = 0;
+	}
+	else if(rData == '1')
+	{
+		/* turn off LED */
+		HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
+
+		/* reset data */
+		rData = 0;
+	}
 
 
     /* USER CODE END WHILE */
