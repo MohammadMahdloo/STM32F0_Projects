@@ -123,10 +123,26 @@ int main(void)
 	  if (rdata == '0')
 	  {
 		  HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
+
+		  /* make tData */
+		  sprintf((char*) tData, "LED Off.\n", button_counter);
+
+		  /* send data */
+		  HAL_UART_Transmit(&huart1, tData, 9, 100);
+
+		  rdata = 0;
 	  }
 	  else if (rdata == '1')
 	  {
 		  HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
+
+		  /* make tData */
+		  sprintf((char*) tData, "LED On.\n", button_counter);
+
+		  /* send data */
+		  HAL_UART_Transmit(&huart1, tData, 8, 100);
+
+		  rdata = 0;
 	  }
 
 	  /* send data if button pressed */
