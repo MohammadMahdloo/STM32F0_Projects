@@ -125,7 +125,7 @@ int main(void)
 		  HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
 
 		  /* make tData */
-		  sprintf((char*) tData, "LED Off.\n", button_counter);
+		  sprintf((char*) tData, "LED Off.\n");
 
 		  /* send data */
 		  HAL_UART_Transmit(&huart1, tData, 9, 100);
@@ -137,7 +137,7 @@ int main(void)
 		  HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
 
 		  /* make tData */
-		  sprintf((char*) tData, "LED On.\n", button_counter);
+		  sprintf(tData, "LED On.\n");
 
 		  /* send data */
 		  HAL_UART_Transmit(&huart1, tData, 8, 100);
