@@ -46,7 +46,9 @@
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN PFP */
-
+extern uint8_t rxData;
+extern uint8_t program_starting_flag;
+extern uint8_t new_message_flag;
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -55,7 +57,7 @@
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
-
+extern UART_HandleTypeDef huart1;
 /* USER CODE BEGIN EV */
 
 /* USER CODE END EV */
@@ -71,6 +73,7 @@ void NMI_Handler(void)
   /* USER CODE BEGIN NonMaskableInt_IRQn 0 */
 
   /* USER CODE END NonMaskableInt_IRQn 0 */
+  HAL_RCC_NMI_IRQHandler();
   /* USER CODE BEGIN NonMaskableInt_IRQn 1 */
    while (1)
   {
@@ -140,6 +143,45 @@ void SysTick_Handler(void)
 /* please refer to the startup file (startup_stm32f0xx.s).                    */
 /******************************************************************************/
 
+/**
+  * @brief This function handles USART1 global interrupt.
+  */
+void USART1_IRQHandler(void)
+{
+  /* USER CODE BEGIN USART1_IRQn 0 */
+
+  /* USER CODE END USART1_IRQn 0 */
+  HAL_UART_IRQHandler(&huart1);
+  /* USER CODE BEGIN USART1_IRQn 1 */
+
+  /* USER CODE END USART1_IRQn 1 */
+}
+
 /* USER CODE BEGIN 1 */
+
+/* uart rx call back */
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+	/* check interrupt occurred in USART1 */
+	if(huart->Instance == USART1)
+	{
+		/* set the interrupt flag */
+		new_message_flag = 1;
+
+		/* to be ready to another receive */
+		HAL_UART_Receive_IT(&huart1, &rxData, 1);
+	}
+}
+
+/* uart tx call back */
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
+{
+	/* check interrupt occurred in USART1 */
+	if(huart->Instance == USART1)
+	{
+		/* program initialized completely */
+		program_starting_flag = 1;
+	}
+}
 
 /* USER CODE END 1 */
