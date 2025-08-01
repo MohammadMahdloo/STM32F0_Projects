@@ -41,6 +41,9 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
+extern UART_HandleTypeDef huart1;
+
+extern uint8_t tx_flag, rx_flag, rxData[20];
 
 /* USER CODE END PV */
 
@@ -158,5 +161,39 @@ void DMA1_Channel2_3_IRQHandler(void)
 }
 
 /* USER CODE BEGIN 1 */
+
+/* tx complete call back */
+//void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
+//{
+//	/* check uart instance */
+//	if(huart->Instance == USART1)
+//	{
+//		/* execute when transmit with dma complete */
+//		tx_flag = 1;
+//	}
+//}
+
+/* rx half complete call back */
+void HAL_UART_RxHalfCpltCallback(UART_HandleTypeDef *huart)
+{
+	/* check uart instance */
+	if (huart->Instance == USART1) {
+		/* execute when received with dma for half-size of rx buffer */
+		rx_flag = 1;
+    }
+}
+
+/* rx complete call back */
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+	/* check uart instance */
+	if (huart->Instance == USART1) {
+		/* execute when received with dma for full-size of rx buffer */
+		rx_flag = 2;
+
+		/* ready again */
+		HAL_UART_Receive_DMA(&huart1, rxData, 10);
+    }
+}
 
 /* USER CODE END 1 */

@@ -21,7 +21,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "stdio.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -60,6 +60,13 @@ static void MX_USART1_UART_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
+uint8_t txData[] = "Hello World From STM32F0!\n";
+
+uint8_t rxData[20];
+
+uint8_t tx_flag = 0;
+uint8_t rx_flag = 0;
+
 /* USER CODE END 0 */
 
 /**
@@ -94,6 +101,12 @@ int main(void)
   MX_DMA_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
+
+  /* uart transmit with dma, buffer: txData, length: sizeof(txData) - 1 */
+  HAL_UART_Transmit_DMA(&huart1, txData, sizeof(txData) - 1);
+
+  /* uart receive with dma, buffer: rxData, length: 10 */
+  HAL_UART_Receive_DMA(&huart1, rxData, 10);
 
   /* USER CODE END 2 */
 
